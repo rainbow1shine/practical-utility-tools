@@ -1,17 +1,18 @@
 <template>
-  <div class="tool">
-    <p style="margin-bottom:14px;color:#636e72;">💱 HexConvert —— 即将上线，敬请期待！</p>
-    <div style="
-      background:linear-gradient(135deg,#e8f5f2 0%,#e0f4ff 100%);
-      border-radius:12px;padding:40px;text-align:center;
-      border:2px dashed rgba(116,185,255,0.35);
-    ">
-      <div style="font-size:60px;">💱</div>
-      <div style="margin-top:12px;color:#636e72;font-size:13px;">功能开发中 · 即将上线</div>
-    </div>
+  <div>
+    <div class="row"><span class="label">十进制</span><input v-model="dec" class="input" @input="fromDec" /></div>
+    <div class="row"><span class="label">二进制</span><input v-model="bin" class="input" @input="fromBin" /></div>
+    <div class="row"><span class="label">八进制</span><input v-model="oct" class="input" @input="fromOct" /></div>
+    <div class="row"><span class="label">十六进制</span><input v-model="hex" class="input" @input="fromHex" /></div>
+    <button class="btn btn-secondary" @click="reset">🔄 清空</button>
   </div>
 </template>
-
 <script setup>
-// HexConvert 工具 —— 占位组件，后续补充完整实现
+import { ref } from 'vue'
+const dec = ref(''); const bin = ref(''); const oct = ref(''); const hex = ref('')
+const fromDec = () => { const n = parseInt(dec.value,10); if(!isNaN(n)){ bin.value=n.toString(2); oct.value=n.toString(8); hex.value=n.toString(16).toUpperCase() } }
+const fromBin = () => { const n = parseInt(bin.value,2); if(!isNaN(n)){ dec.value=n.toString(10); oct.value=n.toString(8); hex.value=n.toString(16).toUpperCase() } }
+const fromOct = () => { const n = parseInt(oct.value,8); if(!isNaN(n)){ dec.value=n.toString(10); bin.value=n.toString(2); hex.value=n.toString(16).toUpperCase() } }
+const fromHex = () => { const n = parseInt(hex.value,16); if(!isNaN(n)){ dec.value=n.toString(10); bin.value=n.toString(2); oct.value=n.toString(8) } }
+const reset = () => { dec.value=bin.value=oct.value=hex.value='' }
 </script>

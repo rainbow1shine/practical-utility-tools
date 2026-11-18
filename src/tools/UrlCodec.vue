@@ -1,17 +1,20 @@
 <template>
-  <div class="tool">
-    <p style="margin-bottom:14px;color:#636e72;">🔗 UrlCodec —— 即将上线，敬请期待！</p>
-    <div style="
-      background:linear-gradient(135deg,#e8f5f2 0%,#e0f4ff 100%);
-      border-radius:12px;padding:40px;text-align:center;
-      border:2px dashed rgba(116,185,255,0.35);
-    ">
-      <div style="font-size:60px;">🔗</div>
-      <div style="margin-top:12px;color:#636e72;font-size:13px;">功能开发中 · 即将上线</div>
+  <div>
+    <div class="col"><textarea v-model="input" class="input" rows="3"></textarea></div>
+    <div class="row">
+      <button class="btn btn-sm" @click="input=encodeURIComponent(input)">URL 编码</button>
+      <button class="btn btn-sm" @click="tryDecode">URL 解码</button>
+      <button class="btn btn-sm" @click="toB64">Base64 编码</button>
+      <button class="btn btn-sm" @click="fromB64">Base64 解码</button>
+      <button class="btn btn-danger btn-sm" @click="input=''">清空</button>
     </div>
+    <div class="result-box" style="margin-top:12px">{{ input }}</div>
   </div>
 </template>
-
 <script setup>
-// UrlCodec 工具 —— 占位组件，后续补充完整实现
+import { ref } from 'vue'
+const input = ref('https://www.baidu.com/s?wd=你好')
+const tryDecode = () => { try { input.value = decodeURIComponent(input.value) } catch {} }
+const toB64 = () => { input.value = btoa(unescape(encodeURIComponent(input.value))) }
+const fromB64 = () => { try { input.value = decodeURIComponent(escape(atob(input.value))) } catch {} }
 </script>

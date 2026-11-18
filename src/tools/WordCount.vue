@@ -1,17 +1,36 @@
 <template>
-  <div class="tool">
-    <p style="margin-bottom:14px;color:#636e72;">📝 WordCount —— 即将上线，敬请期待！</p>
-    <div style="
-      background:linear-gradient(135deg,#e8f5f2 0%,#e0f4ff 100%);
-      border-radius:12px;padding:40px;text-align:center;
-      border:2px dashed rgba(116,185,255,0.35);
-    ">
-      <div style="font-size:60px;">📝</div>
-      <div style="margin-top:12px;color:#636e72;font-size:13px;">功能开发中 · 即将上线</div>
+  <div>
+    <textarea v-model="text" class="input" rows="6" placeholder="粘贴文本进来..." style="resize:vertical"></textarea>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px">
+      <div class="result-box" style="text-align:center"><b>{{ stats.chars }}</b> 总字符</div>
+      <div class="result-box" style="text-align:center"><b>{{ stats.noSpace }}</b> 不含空格</div>
+      <div class="result-box" style="text-align:center"><b>{{ stats.cn }}</b> 中文字</div>
+      <div class="result-box" style="text-align:center"><b>{{ stats.en }}</b> 英文单词</div>
+      <div class="result-box" style="text-align:center"><b>{{ stats.lines }}</b> 行数</div>
+      <div class="result-box" style="text-align:center"><b>{{ stats.paragraphs }}</b> 段落</div>
+    </div>
+    <div v-if="topChars.length" style="margin-top:14px">
+      <div class="label">字频 Top10</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+        <span v-for="c in topChars" :key="c[0]" class="tag">{{ c[0] }} × {{ c[1] }}</span>
+      </div>
     </div>
   </div>
 </template>
-
 <script setup>
-// WordCount 工具 —— 占位组件，后续补充完整实现
+import { ref, computed } from 'vue'
+const text = ref('')
+const stats = computed(() => {
+  const t = text.value
+  return {
+    chars: t.length, noSpace: t.replace(/\s/g,'').length,
+    cn: (t.match(/[\u4e00-\u9fa5]/g)||[]).length,
+    en: (t.match(/[a-zA-Z]+/g)||[]).length,
+    lines: t.split('\n').length, paragraphs: t.split(/\n\s*\n/).length
+  }
+})
+const topChars = computed(() => {
+  const m = {}; for(const c of text.value.replace(/\s/g,'')) m[c] = (m[c]||0)+1
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10)
+})
 </script>

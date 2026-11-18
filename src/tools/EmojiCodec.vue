@@ -1,17 +1,17 @@
 <template>
-  <div class="tool">
-    <p style="margin-bottom:14px;color:#636e72;">😊 EmojiCodec —— 即将上线，敬请期待！</p>
-    <div style="
-      background:linear-gradient(135deg,#e8f5f2 0%,#e0f4ff 100%);
-      border-radius:12px;padding:40px;text-align:center;
-      border:2px dashed rgba(116,185,255,0.35);
-    ">
-      <div style="font-size:60px;">😊</div>
-      <div style="margin-top:12px;color:#636e72;font-size:13px;">功能开发中 · 即将上线</div>
-    </div>
+  <div>
+    <div class="col"><span class="label">Emoji</span><input v-model="em" class="input" placeholder="😊👋🌍" /></div>
+    <div class="row"><button class="btn btn-primary" @click="e2c">→ 码点</button><button class="btn btn-secondary" @click="c2e">码点 →</button></div>
+    <div class="col"><span class="label">码点（空格分隔）</span><input v-model="code" class="input" placeholder="1F60A 1F44B 1F30D" /></div>
+    <div class="result-box" style="margin-top:12px">{{ result }}</div>
   </div>
 </template>
-
 <script setup>
-// EmojiCodec 工具 —— 占位组件，后续补充完整实现
+import { ref } from 'vue'
+const em = ref('😊👋🌍'); const code = ref(''); const result = ref('')
+const e2c = () => { result.value = [...em.value].map(c => '\\u{' + c.codePointAt(0).toString(16).toUpperCase() + '}').join(' ') }
+const c2e = () => {
+  try { result.value = code.value.trim().split(/\s+/).map(c => String.fromCodePoint(parseInt(c,16))).join('') }
+  catch(e){ result.value = '❌ 码点错误' }
+}
 </script>

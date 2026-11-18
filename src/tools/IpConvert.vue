@@ -1,17 +1,20 @@
 <template>
-  <div class="tool">
-    <p style="margin-bottom:14px;color:#636e72;">🌐 IpConvert —— 即将上线，敬请期待！</p>
-    <div style="
-      background:linear-gradient(135deg,#e8f5f2 0%,#e0f4ff 100%);
-      border-radius:12px;padding:40px;text-align:center;
-      border:2px dashed rgba(116,185,255,0.35);
-    ">
-      <div style="font-size:60px;">🌐</div>
-      <div style="margin-top:12px;color:#636e72;font-size:13px;">功能开发中 · 即将上线</div>
-    </div>
+  <div>
+    <div class="col"><span class="label">IPv4 地址</span><input v-model="ip" class="input" placeholder="如 192.168.1.1" /></div>
+    <div class="row"><button class="btn btn-primary" @click="calc">🔍 计算</button><button class="btn btn-secondary" @click="gen">🎲 随机 IP</button></div>
+    <div class="result-box" style="margin-top:12px;white-space:pre-wrap" v-if="out">{{ out }}</div>
   </div>
 </template>
-
 <script setup>
-// IpConvert 工具 —— 占位组件，后续补充完整实现
+import { ref } from 'vue'
+const ip = ref('192.168.1.1'); const out = ref('')
+const calc = () => {
+  const p = ip.value.split('.').map(Number)
+  if(p.length!==4 || p.some(x=>isNaN(x)||x<0||x>255)){ out.value='❌ IP 格式错误'; return }
+  const dec = p.reduce((a,b)=>a*256+b,0)
+  const bin = p.map(x=>x.toString(2).padStart(8,'0')).join('.')
+  const cls = p[0]<128?'A类':p[0]<192?'B类':p[0]<224?'C类':p[0]<240?'D类':'E类'
+  out.value = `📡 ${ip.value}\n🔢 十进制：${dec}\n🟦 二进制：${bin}\n🏷️ 网段：${cls}`
+}
+const gen = () => { ip.value = Array.from({length:4},()=>Math.floor(Math.random()*256)).join('.'); calc() }
 </script>

@@ -1,17 +1,28 @@
 <template>
-  <div class="tool">
-    <p style="margin-bottom:14px;color:#636e72;">🆔 UuidGen —— 即将上线，敬请期待！</p>
-    <div style="
-      background:linear-gradient(135deg,#e8f5f2 0%,#e0f4ff 100%);
-      border-radius:12px;padding:40px;text-align:center;
-      border:2px dashed rgba(116,185,255,0.35);
-    ">
-      <div style="font-size:60px;">🆔</div>
-      <div style="margin-top:12px;color:#636e72;font-size:13px;">功能开发中 · 即将上线</div>
+  <div>
+    <div class="row"><span class="label">数量</span><input v-model="n" class="input" style="width:70px" /><label><input type="checkbox" v-model="noDash" />去横线</label></div>
+    <button class="btn btn-primary" @click="gen">🆔 生成 UUID v4</button>
+    <div class="result-box" style="margin-top:12px">
+      <div v-for="(u,i) in ids" :key="i" style="margin-bottom:4px;display:flex;gap:8px">
+        <code>{{ u }}</code>
+        <button class="btn btn-sm btn-secondary" @click="navigator.clipboard.writeText(u)">📋</button>
+      </div>
     </div>
   </div>
 </template>
-
 <script setup>
-// UuidGen 工具 —— 占位组件，后续补充完整实现
+import { ref, onMounted } from 'vue'
+const n = ref(5); const noDash = ref(false); const ids = ref([])
+const gen = () => {
+  const out = []
+  for(let i=0;i<n.value;i++){
+    const b = new Uint8Array(16); crypto.getRandomValues(b)
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80
+    const s = [...b].map(x=>x.toString(16).padStart(2,'0')).join('')
+    const uu = s.slice(0,8)+'-'+s.slice(8,12)+'-'+s.slice(12,16)+'-'+s.slice(16,20)+'-'+s.slice(20)
+    out.push(noDash.value ? uu.replace(/-/g,'') : uu)
+  }
+  ids.value = out
+}
+onMounted(gen)
 </script>
