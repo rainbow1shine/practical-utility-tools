@@ -213,10 +213,132 @@ input, textarea, select { font-family: inherit; outline: none; }
 .tool-view { max-width: 900px; }
 .tool-view .page-header { margin-bottom: 18px; }
 
+/* ============ 手机顶栏 ============ */
+.mobile-header {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 54px;
+  background: linear-gradient(180deg, #d6eaf8 0%, #d5f5e3 100%);
+  border-bottom: 1px solid rgba(116,185,255,0.25);
+  z-index: 1000;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+}
+.mobile-header .mburger {
+  font-size: 22px;
+  color: #0984e3;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.mobile-header .mburger:active { background: rgba(9,132,227,0.15); }
+.mobile-header .mtitle {
+  font-size: 16px; font-weight: 700; color: #0984e3;
+}
+.mobile-header .mspacer { flex: 1; }
+
+/* 遮罩层 */
+.sb-mask {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 899;
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 面包屑 */
+.mobile-crumb {
+  display: none;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #636e72;
+  background: rgba(255,255,255,0.5);
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+.mobile-crumb span { cursor: pointer; }
+.mobile-crumb .sep { margin: 0 6px; cursor: default; color: #b2bec3; }
+.mobile-crumb span:hover { color: #0984e3; }
+
 /* ============ 响应式 ============ */
-@media (max-width: 768px) {
-  .sidebar { width: 200px; }
-  .main-area { padding: 20px; }
+
+/* 平板 (≤ 1024px) */
+@media (max-width: 1024px) {
+  .sidebar { width: 220px; }
+  .main-area { padding: 24px 28px; }
+  .tool-card { padding: 20px; }
+}
+
+/* 手机 (≤ 640px) */
+@media (max-width: 640px) {
+  body { overflow: auto; }
+  .app-layout { flex-direction: column; height: auto; min-height: 100vh; }
+
+  .mobile-header { display: flex; }
+  .sb-mask { display: block; }
+
+  /* 侧栏变成抽屉 */
+  .sidebar {
+    position: fixed; top: 0; left: 0;
+    height: 100vh; width: 82vw; max-width: 300px;
+    z-index: 900;
+    transform: translateX(-100%);
+    transition: transform 0.28s ease-out;
+    box-shadow: none;
+  }
+  .app-layout.sb-open .sidebar {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  }
+
+  /* 主内容区 */
+  .main-area {
+    padding: 70px 14px 24px;
+    min-height: auto;
+    background: linear-gradient(135deg, #e8f5f2 0%, #e0f4ff 45%, #f0faf4 100%);
+  }
+
+  .mobile-crumb { display: block; }
+
+  .page-header h1 { font-size: 20px; }
+  .page-header .ph-icon { font-size: 22px; }
+
+  .cat-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .cat-card { padding: 12px 14px; gap: 10px; border-radius: 12px; }
+  .cat-card .cat-icon { font-size: 22px; }
+  .cat-card .cat-info .cat-name { font-size: 13px; }
+  .cat-card .cat-info .cat-count { font-size: 11px; }
+
+  .tool-card {
+    padding: 16px 14px;
+    border-radius: 12px;
+  }
+  .tool-card::before { font-size: 140px; right: -5px; bottom: -30px; }
+  .tool-card::after { width: 120px; height: 120px; top: -25px; left: -25px; }
+
+  .tool-view { max-width: 100%; }
+
+  .row { gap: 8px; margin-bottom: 10px; }
+  .col { gap: 6px; margin-bottom: 10px; }
+
+  .btn { padding: 7px 12px; font-size: 13px; }
+  .input { padding: 8px 10px; font-size: 14px; }
+
+  /* 游戏 canvas 等比缩放 */
+  canvas { max-width: 100%; height: auto !important; }
+}
+
+/* 小手机 (≤ 380px) */
+@media (max-width: 380px) {
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .main-area { padding: 70px 10px 20px; }
+  .sidebar { width: 88vw; }
 }
 
 /* ============ 滚动条美化 ============ */
